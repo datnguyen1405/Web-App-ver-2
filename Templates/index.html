@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Wheel</title>
+    <style>
+        #wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #f00;
+            position: absolute;
+            clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+            transition: transform 3s ease-out;
+        }
+
+        #spin-btn {
+            margin-top: 20px;
+            cursor: pointer;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wheel-container">
+    <div id="wheel"></div>
+</div>
+
+<button id="spin-btn" onclick="spinWheel()">Spin</button>
+
+<script>
+    function spinWheel() {
+        const wheel = document.getElementById('wheel');
+        const result = spin();
+
+        // Rotate the wheel randomly
+        const rotation = 360 * (Math.random() * 5 + 5); // Rotate between 5 and 10 full spins
+        wheel.style.transition = 'transform 3s ease-out';
+        wheel.style.transform = `rotate(${rotation}deg)`;
+
+        // Save the result to Google Sheets
+        saveToGoogleSheets(result);
+
+        // After the animation, reset the rotation and transition
+        setTimeout(() => {
+            wheel.style.transition = 'none';
+            wheel.style.transform = 'rotate(0deg)';
+        }, 3000);
+    }
+
+    function spin() {
+        // Replace this array with your custom wheel values
+        const wheelValues = ['Value 1', 'Value 2', 'Value 3', 'Value 4', 'Value 5'];
+        const randomIndex = Math.floor(Math.random() * wheelValues.length);
+        return wheelValues[randomIndex];
+    }
+
+    function saveToGoogleSheets(result) {
+        // Your code to save the result to Google Sheets
+        // Use the provided Python script for this functionality
+        fetch(`/spin?result=${result}`)
+            .then(response => response.text())
+            .then(response => console.log(response))
+            .catch(error => console.error('Error saving to Google Sheets:', error));
+    }
+</script>
+
+</body>
+</html>

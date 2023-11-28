@@ -1,0 +1,89 @@
+<!-- templates/dashboard.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Dashboard</title>
+</head>
+<body>
+
+<h1>Welcome, {{ username }}!</h1>
+<p><a href="{{ url_for('logout') }}">Logout</a></p>
+
+<h2>Get Price Information</h2>
+<form method="post" action="{{ url_for('dashboard') }}">
+    <label for="symbol">Symbol:</label>
+    <input type="text" id="symbol" name="symbol" required>
+    <br>
+    <label for="target_return">Target Expected Return:</label>
+    <select id="target_return" name="target_return" required>
+        <option value="5">5%</option>
+        <option value="10">10%</option>
+        <option value="15">15%</option>
+        <!-- Add more options as needed -->
+    </select>
+    <br>
+    <button type="submit">Get Price</button>
+</form>
+
+{% if price_data %}
+    <h3>Price Data:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Open</th>
+                <th>High</th>
+                <th>Low</th>
+                <th>Close</th>
+                <th>Volume</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(price_data['t']|length) %}
+                <tr>
+                    <td>{{ price_data['t'][i] | timestamp_to_datetime }}</td>
+                    <td>{{ price_data['o'][i] }}</td>
+                    <td>{{ price_data['h'][i] }}</td>
+                    <td>{{ price_data['l'][i] }}</td>
+                    <td>{{ price_data['c'][i] }}</td>
+                    <td>{{ price_data['v'][i] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+<!--{% if price_data %}-->
+<!--    <h3>Price Data:</h3>-->
+<!--    <table>-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                <th>Date</th>-->
+<!--                <th>Open</th>-->
+<!--                <th>High</th>-->
+<!--                <th>Low</th>-->
+<!--                <th>Close</th>-->
+<!--                &lt;!&ndash; Add more columns as needed &ndash;&gt;-->
+<!--            </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--            {% for candle in price_data['candles'] %}-->
+<!--                <tr>-->
+<!--                    <td>{{ candle['time'] | timestamp_to_datetime }}</td>-->
+<!--                    <td>{{ candle['open'] }}</td>-->
+<!--                    <td>{{ candle['high'] }}</td>-->
+<!--                    <td>{{ candle['low'] }}</td>-->
+<!--                    <td>{{ candle['close'] }}</td>-->
+<!--                    &lt;!&ndash; Add more cells as needed &ndash;&gt;-->
+<!--                </tr>-->
+<!--            {% endfor %}-->
+<!--        </tbody>-->
+<!--    </table>-->
+<!--{% endif %}-->
+
+</body>
+</html>
